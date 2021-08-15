@@ -6,25 +6,32 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/suraboy/go-fiber-api/routes"
 )
 
+const AppVersion = "1.0.0"
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
 
-	app := fiber.New()
-
-	app.Get("/", func(c *fiber.Ctx) error {
+	router := fiber.New()
+	router.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World 👋!")
 	})
+	//check version project
+	router.Get("/version", func(c *fiber.Ctx) error {
+		return c.Send([]byte(AppVersion))
+	})
 
-	app.Listen(":" + port)
+	routes.UserRoute(router)
 
+	if err := router.Listen(":" + port); err != nil {
+		log.Fatalf("shutting down the server : %s", err)
+	}
 }
