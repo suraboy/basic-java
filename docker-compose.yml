@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  go-fiber:
+    container_name: go-fiber
+    build:
+      dockerfile: docker/Dockerfile
+      context: .
+    restart: always
+    ports:
+      - "7304:8080"
+    volumes:
+      - ./:/app
+      - ./.env.local:/app/.env
+    environment:
+      APP_ENV: local
+    networks:
+      - network-go-fiber
+
+networks:
+  network-go-fiber:
+    external: false
+    name: network-go-fiber
