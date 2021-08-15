@@ -29,7 +29,7 @@ func main() {
 		return c.Send([]byte(AppVersion))
 	})
 
-	routes.UserRoute(router)
+	routes.UserV1Route(router)
 
 	if err := router.Listen(":" + port); err != nil {
 		log.Fatalf("shutting down the server : %s", err)

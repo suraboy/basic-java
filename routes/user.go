@@ -2,13 +2,11 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
+	service "github.com/suraboy/go-fiber-api/services/v1"
 )
 
-func UserRoute(c *fiber.App) {
+func UserV1Route(c *fiber.App) {
 	r := c.Group("/v1/users")
-	r.Get("", func(c *fiber.Ctx) error {
-		return c.SendString("User V2")
-	})
-
+	r.Get("", service.GetAllUser)
 	//e.POST("/v1/login",api.LoginUser)
 }
