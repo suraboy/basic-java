@@ -6,7 +6,7 @@ import (
 
 func GetAllUser(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
-		"name": "Boy",
-		"age":  20,
+		"name": "Boy V1",
+		"age":  26,
 	})
 }
