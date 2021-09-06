@@ -5,13 +5,19 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/plugin/dbresolver"
 	"log"
 	"os"
 )
 
 func connection(dsn string, source string, replica string) *gorm.DB {
-	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	conn, err := gorm.Open(postgres.New(
+		postgres.Config{
+			DSN: dsn,
+		}), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	conn.Use(dbresolver.Register(dbresolver.Config{
 		Sources:  []gorm.Dialector{postgres.Open(source)},
 		Replicas: []gorm.Dialector{postgres.Open(replica)},
@@ -22,7 +28,6 @@ func connection(dsn string, source string, replica string) *gorm.DB {
 	}
 
 	log.Fatalf("postgres connection:%s", conn)
-
 	return conn
 }
 
@@ -32,12 +37,16 @@ func PostgresConnection() *gorm.DB {
 	if err != nil {
 		log.Fatalf("Error loading .env file:%s", err)
 	}
-	DSN := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable",
+
+	DSN := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=%s TimeZone=%s",
 		os.Getenv("POSTGRES_USER"),
 		os.Getenv("POSTGRES_PASSWORD"),
 		os.Getenv("POSTGRES_HOST"),
 		os.Getenv("POSTGRES_PORT"),
-		os.Getenv("POSTGRES_DBNAME"))
+		os.Getenv("POSTGRES_DATABASE"),
+		"disable",
+		"Asia/Shanghai",
+		)
 
 	source := fmt.Sprintf("user=%s password=%s host=%s",
 		os.Getenv("POSTGRES_USER"),

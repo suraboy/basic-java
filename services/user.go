@@ -11,8 +11,10 @@ func GetAllUser(c *fiber.Ctx) error {
 	postgreSQL := postgreSQL.PostgresConnection()
 	var users []models.Users
 	postgreSQL.Find(&users)
-	for _, user := range users{
+
+	for _, user := range users {
 		fmt.Println(user.Email, user.Username, user.Password)
 	}
+
 	return c.JSON(fiber.Map{"data": users})
 }
