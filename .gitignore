@@ -1,7 +1,6 @@
-.env.local
-.env
 /docker/*
 README.md
 .idea/*
 .idea
 main
+/.env
