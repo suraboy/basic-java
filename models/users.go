@@ -1,9 +1,5 @@
 package models
 
-import (
-	"time"
-)
-
 type Users struct {
 	ID          uint      `gorm:"primary_key" json:"id"`
 	Username    string    `json:"username" validate:"required"`
@@ -18,7 +14,7 @@ type Users struct {
 	Status      string    `json:"status" gorm:"type:enum('active', 'inactive', 'ban');default:'inactive'"`
 	UserGroupId int       `json:"user_group_id"`
 	Gender      string    `json:"gender" gorm:"type:enum('male', 'female');default:'male'"`
-	Birthday    time.Time `json:"birthday"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	//Birthday    *time.Time `json:"birthday"`
+	//CreatedAt   *time.Time `json:"created_at"`
+	//UpdatedAt   *time.Time `json:"updated_at"`
 }

@@ -1,62 +1,43 @@
 package config
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
-	"gorm.io/plugin/dbresolver"
 	"log"
 	"os"
 )
 
-func connection(dsn string, source string, replica string) *gorm.DB {
-	conn, err := gorm.Open(postgres.New(
-		postgres.Config{
-			DSN: dsn,
-		}), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
-	conn.Use(dbresolver.Register(dbresolver.Config{
-		Sources:  []gorm.Dialector{postgres.Open(source)},
-		Replicas: []gorm.Dialector{postgres.Open(replica)},
-		Policy:   dbresolver.RandomPolicy{},
-	}))
-	if err != nil {
-		log.Fatalf("cannot open postgres connection:%s", err)
-	}
+var DB *gorm.DB
 
-	log.Fatalf("postgres connection:%s", conn)
-	return conn
-}
-
-//PostgresConnection connect postgres db
 func PostgresConnection() *gorm.DB {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file:%s", err)
+		log.Fatal("Error loading env file \n", err)
 	}
 
-	DSN := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=%s TimeZone=%s",
-		os.Getenv("POSTGRES_USER"),
-		os.Getenv("POSTGRES_PASSWORD"),
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require",
 		os.Getenv("POSTGRES_HOST"),
-		os.Getenv("POSTGRES_PORT"),
+		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_PASSWORD"),
 		os.Getenv("POSTGRES_DATABASE"),
-		"disable",
-		"Asia/Shanghai",
-		)
+		os.Getenv("POSTGRES_PORT"))
 
-	source := fmt.Sprintf("user=%s password=%s host=%s",
-		os.Getenv("POSTGRES_USER"),
-		os.Getenv("POSTGRES_PASSWORD"),
-		os.Getenv("POSTGRES_HOST"))
+	log.Print("Connecting to PostgreSQL DB...")
 
-	replica := fmt.Sprintf("user=%s password=%s host=%s",
-		os.Getenv("POSTGRES_USER"),
-		os.Getenv("POSTGRES_PASSWORD"),
-		os.Getenv("POSTGRES_HOST_REPLI1"))
+	sqlDB, err := sql.Open("postgres", dsn)
 
-	return connection(DSN, source, replica)
+	DB, err := gorm.Open(postgres.New(postgres.Config{
+		Conn: sqlDB,
+	}), &gorm.Config{})
+
+	if err != nil {
+		log.Fatal("Failed to connect to database. \n", err)
+		os.Exit(2)
+	}
+	log.Println("connected")
+
+	return DB
 }
