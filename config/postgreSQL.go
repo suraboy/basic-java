@@ -27,7 +27,7 @@ func PostgresConnection() *gorm.DB {
 
 	log.Print("Connecting to PostgreSQL DB...")
 
-	sqlDB, err := sql.Open("postgres", dsn)
+	sqlDB, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 
 	DB, err := gorm.Open(postgres.New(postgres.Config{
 		Conn: sqlDB,
