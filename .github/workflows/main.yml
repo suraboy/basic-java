@@ -11,11 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: create env file
-          run: |
-            cp .env.production .env
-            cat > .env << EOF
-            ${{ secrets.ENV }}
-            EOF
+        run: |
+          cp .env.production .env
+          cat > .env << EOF
+          ${{ secrets.ENV }}
+          EOF
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
