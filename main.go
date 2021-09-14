@@ -9,7 +9,8 @@ import (
 	"github.com/suraboy/go-fiber-api/routes"
 )
 
-const AppVersion = "1.0.0"
+const AppVersion = "1.0.1"
+
 func main() {
 	err := godotenv.Load()
 	if err != nil {

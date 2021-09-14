@@ -9,8 +9,6 @@ import (
 	"os"
 )
 
-var DB *gorm.DB
-
 func PostgresConnection() *gorm.DB {
 	err := godotenv.Load()
 	if err != nil {
@@ -21,7 +19,7 @@ func PostgresConnection() *gorm.DB {
 
 	sqlDB, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 
-	DB, err := gorm.Open(postgres.New(postgres.Config{
+	db, err := gorm.Open(postgres.New(postgres.Config{
 		Conn: sqlDB,
 	}), &gorm.Config{})
 
@@ -29,7 +27,7 @@ func PostgresConnection() *gorm.DB {
 		log.Fatal("Failed to connect to database. \n", err)
 		os.Exit(2)
 	}
-	log.Println("connected")
 
-	return DB
+	log.Println("connected")
+	return db
 }
