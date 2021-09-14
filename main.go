@@ -9,8 +9,6 @@ import (
 	"github.com/suraboy/go-fiber-api/routes"
 )
 
-const AppVersion = "1.0.1"
-
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -27,7 +25,7 @@ func main() {
 	})
 	//check version project
 	router.Get("/version", func(c *fiber.Ctx) error {
-		return c.Send([]byte(AppVersion))
+		return c.Send([]byte(os.Getenv("TAG_VERSION")))
 	})
 
 	routes.UserV1Route(router)
