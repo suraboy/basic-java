@@ -15,7 +15,7 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "patzy-official-api" #Must be unique in Heroku
           heroku_email: "13_oy@hotmail.co.th"
-          healthcheck: "https://[YOUR APP's NAME].herokuapp.com/health"
+          healthcheck: "https://patzy-official-api.herokuapp.com/health"
           checkstring: "ok"
         env:
           DATABASE_URL: ${{secrets.DATABASE_URL}}
