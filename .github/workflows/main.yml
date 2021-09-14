@@ -23,3 +23,9 @@ jobs:
           APP_URL: "https://patzy-official-api.herokuapp.com"
           REPEAT: 10
           TAG_VERSION: ${PUSH_TAG_VERSION}"
+      - name: Create env file
+          run: |
+            cp .env.production .env
+            cat > .env << EOF
+            ${{ secrets.ENV }}
+            EOF
