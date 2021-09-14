@@ -9,5 +9,7 @@ func UserV1Route(c *fiber.App) {
 	r := c.Group("/v1/users")
 	r.Get("", services.GetAllUser)
 	r.Get("/:id", services.FindUser)
-	r.Post("", services.CreateNewProduct)
+	r.Post("", services.CreateUser)
+	r.Put("/:id", services.UpdateUser)
+	r.Delete("/:id", services.DeleteUser)
 }
