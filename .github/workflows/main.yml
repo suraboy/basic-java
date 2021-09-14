@@ -24,8 +24,8 @@ jobs:
           REPEAT: 10
           TAG_VERSION: ${PUSH_TAG_VERSION}"
       - name: Create env file
-          run: |
-            cp .env.production .env
-            cat > .env << EOF
-            ${{ secrets.ENV }}
-            EOF
+        run: |
+          cp .env.production .env
+          cat > .env << EOF
+          ${{ secrets.ENV }}
+          EOF
