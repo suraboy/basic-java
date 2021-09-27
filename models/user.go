@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type Users struct {
+type User struct {
 	ID          uint      `gorm:"primary_key" json:"id"`
 	Username    string    `json:"username" validate:"required"`
 	Password    string    `json:"password,omitempty" validate:"required"`

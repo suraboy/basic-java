@@ -14,7 +14,7 @@ import (
 
 func GetAllUser(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
-	var user []models.Users
+	var user []models.User
 	limit, _ := strconv.Atoi(c.Query("limit"))
 	offset, _ := strconv.Atoi(c.Query("offset"))
 
@@ -25,7 +25,7 @@ func GetAllUser(c *fiber.Ctx) error {
 func FindUser(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
 	id := c.Params("id")
-	user := models.Users{}
+	user := models.User{}
 	response := db.Find(&user, id)
 	if err := response.Error; err != nil || response.RowsAffected == 0 {
 		if response.RowsAffected == 0 {
@@ -39,7 +39,7 @@ func FindUser(c *fiber.Ctx) error {
 
 func CreateUser(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
-	user := new(models.Users)
+	user := new(models.User)
 	if err := c.BodyParser(user); err != nil {
 		return utils.SendBadRequest(c, err)
 	}
@@ -64,7 +64,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	pass := ""
 	db := config.PostgresConnection()
 	id := c.Params("id")
-	user := models.Users{}
+	user := models.User{}
 	if db.Find(&user, id).RowsAffected == 0 {
 		return utils.SendNotFound(c)
 	}
@@ -95,7 +95,7 @@ func UpdateUser(c *fiber.Ctx) error {
 func DeleteUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := config.PostgresConnection()
-	user := models.Users{}
+	user := models.User{}
 	if db.Find(&user, id).RowsAffected == 0 {
 		return utils.SendNotFound(c)
 	}

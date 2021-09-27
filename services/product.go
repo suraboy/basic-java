@@ -13,18 +13,20 @@ import (
 
 func GetAllProduct(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
-	var user []models.Products
+	var product []models.Product
 	limit, _ := strconv.Atoi(c.Query("limit"))
 	offset, _ := strconv.Atoi(c.Query("offset"))
-	db.Limit(limit).Offset(offset).Find(&user)
-	return c.JSON(fiber.Map{"data": user})
+
+	db.Limit(limit).Offset(offset).Find(&product)
+	return c.JSON(fiber.Map{"data": product})
 }
 
 func FindProduct(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
 	id := c.Params("id")
-	user := models.Products{}
-	response := db.Find(&user, id)
+	product := models.Product{}
+	response := db.Find(&product, id)
+
 	if err := response.Error; err != nil || response.RowsAffected == 0 {
 		if response.RowsAffected == 0 {
 			return utils.SendNotFound(c)
@@ -32,53 +34,61 @@ func FindProduct(c *fiber.Ctx) error {
 			return utils.SendInternalServerError(c, err)
 		}
 	}
-	return c.JSON(user)
+	return c.JSON(product)
 }
 
 func CreateProduct(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
-	user := new(models.Products)
-	if err := c.BodyParser(user); err != nil {
+	product := new(models.Product)
+
+	if err := c.BodyParser(product); err != nil {
 		return utils.SendBadRequest(c, err)
 	}
+
 	validate := validator.New()
-	err := validate.Struct(user)
+	err := validate.Struct(product)
+
 	if err != nil {
 		return utils.SendValidationError(c, err)
 	}
-	if err := db.Create(&user).Error; err != nil {
+
+	if err := db.Create(&product).Error; err != nil {
 		return utils.SendExceptionError(c, err)
 	}
-	return c.Status(http.StatusCreated).JSON(fiber.Map{"data": user})
+
+	return c.Status(http.StatusCreated).JSON(fiber.Map{"data": product})
 }
 
 func UpdateProduct(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
 	id := c.Params("id")
-	user := models.Products{}
-	if db.Find(&user, id).RowsAffected == 0 {
+	product := models.Product{}
+
+	if db.Find(&product, id).RowsAffected == 0 {
 		return utils.SendNotFound(c)
 	}
 
-	if err := c.BodyParser(&user); err != nil {
+	if err := c.BodyParser(&product); err != nil {
 		return utils.SendBadRequest(c, err)
 	}
 
-	if err := db.Save(&user).Error; err != nil {
+	if err := db.Save(&product).Error; err != nil {
 		return utils.SendExceptionError(c, err)
 	}
-	return c.Status(http.StatusOK).JSON(fiber.Map{"data": user})
+	return c.Status(http.StatusOK).JSON(fiber.Map{"data": product})
 }
 
 func DeleteProduct(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := config.PostgresConnection()
-	user := models.Products{}
-	if db.Find(&user, id).RowsAffected == 0 {
+
+	product := models.Product{}
+
+	if db.Find(&product, id).RowsAffected == 0 {
 		return utils.SendNotFound(c)
 	}
 
-	if err := db.Delete(&user).Error; err != nil {
+	if err := db.Delete(&product).Error; err != nil {
 		return utils.SendInternalServerError(c, err)
 	}
 
