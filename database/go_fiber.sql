@@ -29,3 +29,14 @@ INSERT INTO users (id, username, password, name, last_name, email, remember_toke
 (1, 'admin@admin.com', '$2y$10$NKE.pUShl4/JPqRpPgym1.fhXaumalps/lIrv2x0B6Iy9gM4GU0qG', 'Superadmin', 'administator', 'admin@admin.com', NULL, NULL, NULL, 'waiting', NULL, '1234567890', 'admin', 'active', 1, NULL, NULL, '2020-12-14 23:32:35', '2020-12-14 23:32:35', NULL),
 (2, 'user@user.com', '$2y$10$bK94hCGGApJA.RLEWZc/quVVpwceL0hD0OblbXr2QOJo4aeldfIfu', 'User', '', 'user@user.com', NULL, NULL, NULL, 'waiting', NULL, '', NULL, 'active', 1, NULL, NULL, '2020-12-14 23:32:35', '2020-12-14 23:32:35', NULL),
 (3, 'sirichai.jan@ascendcorp.com', '$2y$10$XEU4zOztvil8F5BKiCHMtueVVuFfMVhkg3MB3.36mxVB5AV2IJjSW', 'Dev Boy', 'Team P ches', 'sirichai.jan@ascendcorp.com', NULL, NULL, NULL, 'waiting', NULL, '1234567890', 'admin', 'active', 1, NULL, NULL, '2020-12-14 23:32:35', '2020-12-14 23:32:35', NULL);
+
+CREATE TABLE products (
+                       id SERIAL PRIMARY KEY,
+                       name varchar(255),
+                       price decimal(2,10),
+                       created_at int,
+                       updated_at int,
+                       created_at timestamp NULL DEFAULT NULL,
+                       updated_at timestamp NULL DEFAULT NULL,
+                       deleted_at timestamp NULL DEFAULT NULL
+);

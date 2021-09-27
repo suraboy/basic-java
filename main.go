@@ -16,7 +16,7 @@ func main() {
 	}
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Fatal("$PORT must be set")
+		log.Fatalf("$PORT must be set : %s", port)
 	}
 
 	router := fiber.New()
@@ -29,6 +29,7 @@ func main() {
 	})
 
 	routes.UserV1Route(router)
+	routes.ProductV1Route(router)
 
 	if err := router.Listen(":" + port); err != nil {
 		log.Fatalf("shutting down the server : %s", err)

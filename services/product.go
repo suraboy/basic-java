@@ -6,15 +6,14 @@ import (
 	"github.com/suraboy/go-fiber-api/config"
 	"github.com/suraboy/go-fiber-api/models"
 	"github.com/suraboy/go-fiber-api/utils"
-	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 	"strconv"
 )
 
-func GetAllUser(c *fiber.Ctx) error {
+func GetAllProduct(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
-	var user []models.Users
+	var user []models.Products
 	limit, _ := strconv.Atoi(c.Query("limit"))
 	offset, _ := strconv.Atoi(c.Query("offset"))
 
@@ -22,10 +21,10 @@ func GetAllUser(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"data": user})
 }
 
-func FindUser(c *fiber.Ctx) error {
+func FindProduct(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
 	id := c.Params("id")
-	user := models.Users{}
+	user := models.Products{}
 	response := db.Find(&user, id)
 	if err := response.Error; err != nil || response.RowsAffected == 0 {
 		if response.RowsAffected == 0 {
@@ -37,9 +36,9 @@ func FindUser(c *fiber.Ctx) error {
 	return c.JSON(user)
 }
 
-func CreateUser(c *fiber.Ctx) error {
+func CreateProduct(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
-	user := new(models.Users)
+	user := new(models.Products)
 	if err := c.BodyParser(user); err != nil {
 		return utils.SendBadRequest(c, err)
 	}
@@ -48,23 +47,16 @@ func CreateUser(c *fiber.Ctx) error {
 	if err != nil {
 		return utils.SendValidationError(c, err)
 	}
-	password := []byte(user.Password)
-	hashedPassword, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-	if err != nil {
-		panic(err)
-	}
-	user.Password = string(hashedPassword)
 	if err := db.Create(&user).Error; err != nil {
 		return utils.SendExceptionError(c, err)
 	}
 	return c.Status(http.StatusCreated).JSON(fiber.Map{"data": user})
 }
 
-func UpdateUser(c *fiber.Ctx) error {
-	pass := ""
+func UpdateProduct(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
 	id := c.Params("id")
-	user := models.Users{}
+	user := models.Products{}
 	if db.Find(&user, id).RowsAffected == 0 {
 		return utils.SendNotFound(c)
 	}
@@ -73,29 +65,16 @@ func UpdateUser(c *fiber.Ctx) error {
 		return utils.SendBadRequest(c, err)
 	}
 
-	if user.Password != "" {
-		password := []byte(user.Password)
-		hashedPassword, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-		if err != nil {
-			panic(err)
-		}
-		pass = string(hashedPassword)
-	}
-
-	if pass != "" {
-		user.Password = pass
-	}
-
 	if err := db.Save(&user).Error; err != nil {
 		return utils.SendExceptionError(c, err)
 	}
 	return c.Status(http.StatusOK).JSON(fiber.Map{"data": user})
 }
 
-func DeleteUser(c *fiber.Ctx) error {
+func DeleteProduct(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := config.PostgresConnection()
-	user := models.Users{}
+	user := models.Products{}
 	if db.Find(&user, id).RowsAffected == 0 {
 		return utils.SendNotFound(c)
 	}
