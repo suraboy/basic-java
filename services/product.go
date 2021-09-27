@@ -16,7 +16,6 @@ func GetAllProduct(c *fiber.Ctx) error {
 	var user []models.Products
 	limit, _ := strconv.Atoi(c.Query("limit"))
 	offset, _ := strconv.Atoi(c.Query("offset"))
-
 	db.Limit(limit).Offset(offset).Find(&user)
 	return c.JSON(fiber.Map{"data": user})
 }
