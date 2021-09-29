@@ -25,6 +25,7 @@ func FindProduct(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
 	id := c.Params("id")
 	product := models.Product{}
+
 	response := db.Find(&product, id)
 
 	if err := response.Error; err != nil || response.RowsAffected == 0 {
@@ -75,6 +76,7 @@ func UpdateProduct(c *fiber.Ctx) error {
 	if err := db.Save(&product).Error; err != nil {
 		return utils.SendExceptionError(c, err)
 	}
+
 	return c.Status(http.StatusOK).JSON(fiber.Map{"data": product})
 }
 

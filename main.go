@@ -28,6 +28,10 @@ func main() {
 		return c.Send([]byte(os.Getenv("TAG_VERSION")))
 	})
 
+	router.Static("/", "./storage/images", fiber.Static{
+		Index: "",
+	})
+
 	routes.UserV1Route(router)
 	routes.ProductV1Route(router)
 
