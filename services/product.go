@@ -5,6 +5,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/suraboy/go-fiber-api/config"
 	"github.com/suraboy/go-fiber-api/models"
+	"github.com/suraboy/go-fiber-api/internals"
 	"github.com/suraboy/go-fiber-api/utils"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
