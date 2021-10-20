@@ -31,12 +31,12 @@ INSERT INTO users (id, username, password, name, last_name, email, remember_toke
 (3, 'sirichai.jan@ascendcorp.com', '$2y$10$XEU4zOztvil8F5BKiCHMtueVVuFfMVhkg3MB3.36mxVB5AV2IJjSW', 'Dev Boy', 'Team P ches', 'sirichai.jan@ascendcorp.com', NULL, NULL, NULL, 'waiting', NULL, '1234567890', 'admin', 'active', 1, NULL, NULL, '2020-12-14 23:32:35', '2020-12-14 23:32:35', NULL);
 
 CREATE TABLE products (
-                       id SERIAL PRIMARY KEY,
-                       name varchar(255),
-                       price decimal(2,10),
-                       created_at int,
-                       updated_at int,
-                       created_at timestamp NULL DEFAULT NULL,
-                       updated_at timestamp NULL DEFAULT NULL,
-                       deleted_at timestamp NULL DEFAULT NULL
+                          id SERIAL PRIMARY KEY,
+                          name varchar(255),
+                          price NUMERIC(5,2),
+                          created_by int,
+                          updated_by int,
+                          created_at timestamp NULL DEFAULT NULL,
+                          updated_at timestamp NULL DEFAULT NULL,
+                          deleted_at timestamp NULL DEFAULT NULL
 );

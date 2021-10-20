@@ -24,10 +24,20 @@ docker-compose up -d
 ```bash
 docker-compose down
 ```
+Setup Database
+------------------------------------
+Check ip database contrainer
+```bash
+ docker inspect pg_container | grep IPAddress
+```
 
 Running Application
 ------------------------------------
 Open the browser
 ```bash
 http://localhost:7304
+```
+Open the database
+```bash
+http://localhost:5050
 ```
