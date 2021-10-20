@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	_ "github.com/lib/pq"
 	"github.com/suraboy/go-fiber-api/config"
+	"github.com/suraboy/go-fiber-api/internals"
 	"github.com/suraboy/go-fiber-api/models"
-	"github.com/suraboy/go-fiber-api/utils"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
@@ -29,9 +29,9 @@ func FindUser(c *fiber.Ctx) error {
 	response := db.Find(&user, id)
 	if err := response.Error; err != nil || response.RowsAffected == 0 {
 		if response.RowsAffected == 0 {
-			return utils.SendNotFound(c)
+			return internals.SendNotFound(c)
 		} else {
-			return utils.SendInternalServerError(c, err)
+			return internals.SendInternalServerError(c, err)
 		}
 	}
 	return c.JSON(user)
@@ -41,12 +41,12 @@ func CreateUser(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
 	user := new(models.User)
 	if err := c.BodyParser(user); err != nil {
-		return utils.SendBadRequest(c, err)
+		return internals.SendBadRequest(c, err)
 	}
 	validate := validator.New()
 	err := validate.Struct(user)
 	if err != nil {
-		return utils.SendValidationError(c, err)
+		return internals.SendValidationError(c, err)
 	}
 	password := []byte(user.Password)
 	hashedPassword, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
@@ -55,7 +55,7 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 	user.Password = string(hashedPassword)
 	if err := db.Create(&user).Error; err != nil {
-		return utils.SendExceptionError(c, err)
+		return internals.SendExceptionError(c, err)
 	}
 	return c.Status(http.StatusCreated).JSON(fiber.Map{"data": user})
 }
@@ -66,11 +66,11 @@ func UpdateUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user := models.User{}
 	if db.Find(&user, id).RowsAffected == 0 {
-		return utils.SendNotFound(c)
+		return internals.SendNotFound(c)
 	}
 
 	if err := c.BodyParser(&user); err != nil {
-		return utils.SendBadRequest(c, err)
+		return internals.SendBadRequest(c, err)
 	}
 
 	if user.Password != "" {
@@ -87,7 +87,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 
 	if err := db.Save(&user).Error; err != nil {
-		return utils.SendExceptionError(c, err)
+		return internals.SendExceptionError(c, err)
 	}
 	return c.Status(http.StatusOK).JSON(fiber.Map{"data": user})
 }
@@ -97,11 +97,11 @@ func DeleteUser(c *fiber.Ctx) error {
 	db := config.PostgresConnection()
 	user := models.User{}
 	if db.Find(&user, id).RowsAffected == 0 {
-		return utils.SendNotFound(c)
+		return internals.SendNotFound(c)
 	}
 
 	if err := db.Delete(&user).Error; err != nil {
-		return utils.SendInternalServerError(c, err)
+		return internals.SendInternalServerError(c, err)
 	}
 
 	return c.Status(http.StatusNoContent).JSON(nil)
