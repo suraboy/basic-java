@@ -14,8 +14,5 @@ func AuthenticateV1Route(c *fiber.App) {
 
 	// Restricted Routes
 	r := c.Group("/v1/oauth")
-	r.Get(
-		"/login",
-		services.Login,
-	)
+	r.Get("/login", services.Login)
 }
