@@ -33,6 +33,7 @@ func main() {
 	})
 
 	routes.UserV1Route(router)
+	routes.AuthenticateV1Route(router)
 	routes.ProductV1Route(router)
 
 	if err := router.Listen(":" + port); err != nil {
