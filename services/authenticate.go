@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/gofiber/fiber"
 	"github.com/golang-jwt/jwt"
+	"github.com/suraboy/go-fiber-api/internals"
 	"time"
 )
 
@@ -12,7 +13,7 @@ func Login(c *fiber.Ctx) error {
 
 	// Throws Unauthorized error
 	if user != "admin" || pass != "1234" {
-		return c.SendStatus(fiber.StatusUnauthorized)
+		return internals.SendExceptionError(c,nil)
 	}
 
 	// Create the Claims
@@ -28,7 +29,7 @@ func Login(c *fiber.Ctx) error {
 	// Generate encoded token and send it as response.
 	t, err := token.SignedString([]byte("secret"))
 	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return internals.SendExceptionError(c,nil)
 	}
 
 	return c.JSON(fiber.Map{"token": t})
