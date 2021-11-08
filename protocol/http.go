@@ -1,6 +1,7 @@
 package protocol
 
 import (
+	"github.com/suraboy/go-fiber-api/config"
 	"github.com/suraboy/go-fiber-api/internal/handler/http"
 	route "github.com/suraboy/go-fiber-api/internal/routes"
 	"github.com/suraboy/go-fiber-api/pkg/logger"
@@ -52,7 +53,7 @@ func ServeREST() error {
 
 	route.UserV1Route(v1, hdl)
 
-	err := f.Listen(":8080")
+	err := f.Listen(":" + config.GetViper().App.HTTPPort)
 	if err != nil {
 		return err
 	}
