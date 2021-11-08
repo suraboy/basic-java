@@ -3,7 +3,7 @@ module github.com/suraboy/go-fiber-api
 go 1.16
 
 require (
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/fsnotify/fsnotify v1.4.9
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/gofiber/fiber/v2 v2.20.2
 	github.com/lib/pq v1.10.3 // indirect
