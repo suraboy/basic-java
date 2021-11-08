@@ -1,2 +1,2 @@
-web: go-fiber-api
+web: bin/go-fiber-api
 
