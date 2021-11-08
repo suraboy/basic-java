@@ -18,7 +18,4 @@ ENV HOME /app
 WORKDIR /app
 RUN useradd -m heroku
 USER heroku
-
-ENV GO111MODULE on
-
-CMD ["/app/go-fiber-api", "serve-rest"]
+CMD /app/bin/go-fiber-api
