@@ -1,4 +1,4 @@
-package route
+package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -6,10 +6,10 @@ import (
 )
 
 func UserV1Route(v1 fiber.Router, hdl *http.HTTPHandler) {
-	r := v1.Group("/v1/users")
+	r := v1.Group("/users")
 	r.Get("", hdl.GetAllUser)
-	//r.Get("/:id", http.FindUser)
-	//r.Post("", http.CreateUser)
-	//r.Put("/:id", http.UpdateUser)
-	//r.Delete("/:id", http.DeleteUser)
+	r.Get("/:id", hdl.FindUserById)
+	//r.Post("", hdl.CreateUser)
+	//r.Put("/:id", hdl.UpdateUser)
+	//r.Delete("/:id", hdl.DeleteUser)
 }

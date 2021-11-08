@@ -1,33 +1,35 @@
 package infrastructure
 
 import (
-	"database/sql"
-	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/plugin/dbresolver"
 	"log"
-	"os"
 )
 
 
 func PostgresConnection() *gorm.DB {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading env file \n", err)
-	}
-
 	log.Print("Connecting to PostgreSQL DB...")
 
-	sqlDB, err := sql.Open("postgres", "postgres://tfmdhiaxecdrzy:4d65da8a1ed2426b96429138ed9a62029712f0b6d6f737505f4ff1e422508a54@ec2-107-20-24-247.compute-1.amazonaws.com:5432/d6gg7trl9p9gub")
-	gormDB, err := gorm.Open(postgres.New(postgres.Config{
-		Conn: sqlDB,
-	}), &gorm.Config{})
+	dsn := "host=ec2-107-20-24-247.compute-1.amazonaws.com user=tfmdhiaxecdrzy password=4d65da8a1ed2426b96429138ed9a62029712f0b6d6f737505f4ff1e422508a54 dbname=d6gg7trl9p9gub port=5432 TimeZone=Asia/Bangkok"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 
 	if err != nil {
-		log.Fatal("Failed to connect to database. \n", err)
-		os.Exit(2)
+		logrus.Fatalf("Failed to connect to database : %s", err)
 	}
 
+
+	_ = db.Use(dbresolver.Register(dbresolver.Config{
+		Sources:  []gorm.Dialector{postgres.Open(dsn)},
+		Replicas: []gorm.Dialector{postgres.Open(dsn)},
+		Policy:   dbresolver.RandomPolicy{},
+	}))
+
+	logrus.Infof("connect mysql success : %s", dsn)
 	log.Println("connected")
-	return gormDB
+	return db
 }

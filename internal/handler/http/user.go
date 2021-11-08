@@ -4,7 +4,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	domain "github.com/suraboy/go-fiber-api/internal/core/domain/models"
 	transform "github.com/suraboy/go-fiber-api/pkg/util"
-	"github.com/suraboy/go-fiber-api/pkg/validators"
 )
 
 /*
@@ -18,26 +17,29 @@ import (
 	|
 */
 
-// @Tags api/kkbank
-// @Success 200
-// @Method GET
-// @Router /api/kkbank/inquiry [GET]
-
 func (hdl *HTTPHandler) GetAllUser(c *fiber.Ctx) error {
 	var req domain.User
 	if err := c.QueryParser(&req); err != nil {
 		return c.JSON(transform.SendBadRequest(c,err))
 	}
 
-	validate := validators.NewValidator()
-	err := validate.ValidateStruct(req)
-	if err != nil {
-		return c.JSON(transform.SendValidationError(c,err))
-	}
-
 	response, err := hdl.svc.GetAllUser(&req)
 	if err != nil {
-		return c.JSON(transform.SendNotFound(c))
+		return transform.SendNotFound(c)
+	}
+
+	return c.JSON(transform.RespondWithCollection(response))
+}
+
+func (hdl *HTTPHandler) FindUserById(c *fiber.Ctx) error {
+	var req domain.User
+	if err := c.QueryParser(&req); err != nil {
+		return c.JSON(transform.SendBadRequest(c,err))
+	}
+
+	response, err := hdl.svc.FindUserById(&req)
+	if err != nil {
+		return transform.SendNotFound(c)
 	}
 
 	return c.JSON(transform.RespondWithCollection(response))

@@ -13,5 +13,6 @@ import "github.com/suraboy/go-fiber-api/internal/core/domain/models"
 */
 
 type Repository interface {
-	GetAllUser(request *models.User, field ...interface{}) (models.User, error)
+	GetUsers(request *models.User) ([]models.User, error)
+	FindUser(request *models.User) (models.User, error)
 }

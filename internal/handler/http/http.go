@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/suraboy/go-fiber-api/internal/core/port"
+	"github.com/suraboy/go-fiber-api/internal/core/service"
 	"github.com/suraboy/go-fiber-api/pkg/validators"
 )
 
@@ -14,7 +15,7 @@ type HTTPHandler struct {
 	validator validators.Validator
 }
 
-func NewHTTPHandler(svc port.Service, validator validators.Validator) *HTTPHandler {
+func NewHTTPHandler(svc *service.Service, validator validators.Validator) *HTTPHandler {
 	return &HTTPHandler{
 		svc:       svc,
 		validator: validator,

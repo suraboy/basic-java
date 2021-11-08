@@ -13,5 +13,6 @@ import "github.com/suraboy/go-fiber-api/internal/core/domain/models"
 */
 
 type Service interface {
-	GetAllUser(request *models.User) (models.User, error)
+	GetAllUser(request *models.User) ([]models.User, error)
+	FindUserById(request *models.User) (models.User, error)
 }

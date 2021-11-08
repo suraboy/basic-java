@@ -4,10 +4,19 @@ import (
 	"github.com/suraboy/go-fiber-api/internal/core/domain/models"
 )
 
-/**
- * Created by boy.sirichai on 8/11/2021 AD
- */
+/*
+	|--------------------------------------------------------------------------
+	| Application's Business Logic
+	|--------------------------------------------------------------------------
+	|
+	| Here you can implement a business logic  for your application
+	|
+*/
 
-func (s Service) GetAllUser(request *models.User) (models.User, error) {
-	return models.User{}, nil
+func (s Service) GetAllUser(request *models.User) ([]models.User, error) {
+	return s.repository.GetUsers(request)
+}
+
+func (s Service) FindUserById(request *models.User) (models.User, error) {
+	return s.repository.FindUser(request)
 }
