@@ -1,1 +1,1 @@
-web: bin/go-fiber-api ./cmd
+web: bin/go-fiber-api
