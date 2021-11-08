@@ -38,7 +38,7 @@ func PostgresConnection() *gorm.DB {
 		Policy:   dbresolver.RandomPolicy{},
 	}))
 
-	logrus.Infof("connect mysql success : %s", dsn)
+	logrus.Infof("connect postgres success : %s", dsn)
 	log.Println("connected")
 	return db
 }
