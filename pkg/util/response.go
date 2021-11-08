@@ -1,4 +1,4 @@
-package internals
+package util
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -13,6 +13,20 @@ type MessageFormat struct {
 	StatusCode int    `json:"status_code"`
 	Message    string `json:"message"`
 	Error      string `json:"error"`
+}
+
+type ResponseCollection struct {
+	Data interface{} `json:"data"`
+}
+
+func RespondWithCollection(result interface{}) *ResponseCollection {
+	if result == nil {
+		type Empty struct{}
+		result = Empty{}
+	}
+	return &ResponseCollection{
+		Data: result,
+	}
 }
 
 func CustomResponse(httpCode int, message string, error string) MessageFormat {
