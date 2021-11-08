@@ -6,4 +6,4 @@ build:
   docker:
     web: docker/production/Dockerfile
 run:
-  web: go-fiber-api serve-rest
+  web: go-fiber-api
