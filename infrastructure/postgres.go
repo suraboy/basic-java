@@ -1,7 +1,9 @@
 package infrastructure
 
 import (
+	"fmt"
 	"github.com/sirupsen/logrus"
+	"github.com/suraboy/go-fiber-api/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -13,7 +15,14 @@ import (
 func PostgresConnection() *gorm.DB {
 	log.Print("Connecting to PostgreSQL DB...")
 
-	dsn := "host=ec2-107-20-24-247.compute-1.amazonaws.com user=tfmdhiaxecdrzy password=4d65da8a1ed2426b96429138ed9a62029712f0b6d6f737505f4ff1e422508a54 dbname=d6gg7trl9p9gub port=5432 TimeZone=Asia/Bangkok"
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%v TimeZone=Asia/Bangkok",
+		config.GetViper().Database.Host,
+		config.GetViper().Database.Username,
+		config.GetViper().Database.Password,
+		config.GetViper().Database.Database,
+		config.GetViper().Database.Port,
+	)
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})

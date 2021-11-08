@@ -2,7 +2,7 @@ package protocol
 
 import (
 	"github.com/suraboy/go-fiber-api/internal/handler/http"
-	"github.com/suraboy/go-fiber-api/internal/routes"
+	route "github.com/suraboy/go-fiber-api/internal/router"
 	"github.com/suraboy/go-fiber-api/pkg/logger"
 	"github.com/suraboy/go-fiber-api/pkg/middleware"
 	"os"
@@ -50,7 +50,7 @@ func ServeREST() error {
 		Index: "",
 	})
 
-	routes.UserV1Route(v1, hdl)
+	route.UserV1Route(v1, hdl)
 
 	err := f.Listen(":8080")
 	if err != nil {

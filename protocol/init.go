@@ -1,6 +1,7 @@
 package protocol
 
 import (
+	"github.com/suraboy/go-fiber-api/config"
 	"github.com/suraboy/go-fiber-api/internal/core/service"
 	"github.com/suraboy/go-fiber-api/internal/repository/postgres"
 	"github.com/suraboy/go-fiber-api/pkg/logger"
@@ -25,6 +26,7 @@ type packages struct {
 
 func init() {
 	logger.Init()
+	config.Init(CfgPath)
 	packages := packages{
 		validator: validators.NewValidator(),
 	}
