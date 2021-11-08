@@ -8,4 +8,5 @@ import (
 func main() {
 	fmt.Printf(`kkp-api %s, built with Go %s`, cmd.Version, cmd.GoVersion)
 	cmd.Execute()
+	
 }
