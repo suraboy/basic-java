@@ -1,1 +1,1 @@
-web: go-fiber-api serve-rest
+web: bin/go-fiber-api serve-rest
