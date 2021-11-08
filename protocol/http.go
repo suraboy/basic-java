@@ -2,7 +2,7 @@ package protocol
 
 import (
 	"github.com/suraboy/go-fiber-api/internal/handler/http"
-	route "github.com/suraboy/go-fiber-api/internal/router"
+	route "github.com/suraboy/go-fiber-api/internal/routes"
 	"github.com/suraboy/go-fiber-api/pkg/logger"
 	"github.com/suraboy/go-fiber-api/pkg/middleware"
 	"os"
