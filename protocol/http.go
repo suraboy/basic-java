@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"github.com/suraboy/go-fiber-api/internal/handler/http"
+	route "github.com/suraboy/go-fiber-api/internal/routes"
 	"log"
 	"os"
 )
@@ -51,7 +52,7 @@ func ServeREST() {
 
 	hdl := http.NewHTTPHandler(app.svc, app.pkg.validator)
 	v1.Get("/healthcheck", hdl.HealthCheck)
-	//route.UserV1Route(v1, hdl)
+	route.UserV1Route(v1, hdl)
 
 	if err := f.Listen(":" + port); err != nil {
 		log.Fatalf("shutting down the server : %s", err)
