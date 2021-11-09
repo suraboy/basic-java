@@ -2,7 +2,6 @@ package protocol
 
 import (
 	"github.com/suraboy/go-fiber-api/config"
-	"github.com/suraboy/go-fiber-api/internal/handler/http"
 	"github.com/suraboy/go-fiber-api/pkg/logger"
 	"github.com/suraboy/go-fiber-api/pkg/middleware"
 	"os"
@@ -24,9 +23,7 @@ import (
 */
 
 func ServeREST() error {
-	f := fiber.New(fiber.Config{
-		DisableKeepalive: false,
-	})
+	f := fiber.New()
 
 	middleware := middleware.NewMiddleware()
 
@@ -46,10 +43,10 @@ func ServeREST() error {
 	v1.Static("/", "./storage/images", fiber.Static{
 		Index: "",
 	})
-
-	hdl := http.NewHTTPHandler(app.svc, app.pkg.validator)
-	v1.Get("/healthcheck", hdl.HealthCheck)
-	//route.UserV1Route(v1, hdl)
+	//
+	//hdl := http.NewHTTPHandler(app.svc, app.pkg.validator)
+	//v1.Get("/healthcheck", hdl.HealthCheck)
+	////route.UserV1Route(v1, hdl)
 
 	err := f.Listen(":" + config.GetViper().App.HTTPPort)
 	if err != nil {

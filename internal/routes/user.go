@@ -5,7 +5,6 @@ import (
 )
 
 func UserV1Route(v1 fiber.Router) {
-
 	//r := v1.Group("/users")
 	//r.Get("", http.GetAllUser)
 	//r.Get("/:id", http.FindUserById)
