@@ -1,4 +1,4 @@
-package internals
+package pkg
 
 import (
 	"github.com/gofiber/fiber/v2"
