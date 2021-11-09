@@ -6,6 +6,7 @@ require (
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/gofiber/fiber/v2 v2.20.2
+	github.com/joho/godotenv v1.4.0
 	github.com/lib/pq v1.10.3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.4.2

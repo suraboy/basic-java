@@ -3,7 +3,6 @@ package protocol
 import (
 	"github.com/suraboy/go-fiber-api/config"
 	"github.com/suraboy/go-fiber-api/internal/handler/http"
-	route "github.com/suraboy/go-fiber-api/internal/routes"
 	"github.com/suraboy/go-fiber-api/pkg/logger"
 	"github.com/suraboy/go-fiber-api/pkg/middleware"
 	"os"
@@ -35,10 +34,7 @@ func ServeREST() error {
 	f.Use(recovery.New())
 	f.Use(cors.New())
 
-	hdl := http.NewHTTPHandler(app.svc, app.pkg.validator)
-
 	v1 := f.Group("/v1")
-	v1.Get("/healthcheck", hdl.HealthCheck)
 	v1.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World 👋!")
 	})
@@ -51,7 +47,9 @@ func ServeREST() error {
 		Index: "",
 	})
 
-	route.UserV1Route(v1, hdl)
+	hdl := http.NewHTTPHandler(app.svc, app.pkg.validator)
+	v1.Get("/healthcheck", hdl.HealthCheck)
+	//route.UserV1Route(v1, hdl)
 
 	err := f.Listen(":" + config.GetViper().App.HTTPPort)
 	if err != nil {
