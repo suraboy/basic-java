@@ -1,15 +1,10 @@
 package protocol
 
 import (
-	"github.com/suraboy/go-fiber-api/config"
-	"github.com/suraboy/go-fiber-api/pkg/logger"
-	"github.com/suraboy/go-fiber-api/pkg/middleware"
-	"os"
-	"os/signal"
-
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	recovery "github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/joho/godotenv"
+	"log"
+	"os"
 )
 
 /*
@@ -22,14 +17,23 @@ import (
 	|
 */
 
-func ServeREST() error {
+func ServeREST() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatalf("$PORT must be set : %s", port)
+	}
+
 	f := fiber.New()
-
-	middleware := middleware.NewMiddleware()
-
-	f.Use(middleware.LogRequest)
-	f.Use(recovery.New())
-	f.Use(cors.New())
+	//
+	//middleware := middleware.NewMiddleware()
+	//
+	//f.Use(middleware.LogRequest)
+	//f.Use(recovery.New())
+	//f.Use(cors.New())
 
 	v1 := f.Group("/v1")
 	v1.Get("/", func(c *fiber.Ctx) error {
@@ -48,24 +52,23 @@ func ServeREST() error {
 	//v1.Get("/healthcheck", hdl.HealthCheck)
 	////route.UserV1Route(v1, hdl)
 
-	err := f.Listen(":" + config.GetViper().App.HTTPPort)
-	if err != nil {
-		return err
+	if err := f.Listen(":" + port); err != nil {
+		log.Fatalf("shutting down the server : %s", err)
 	}
-	// gracefully shuts down  ...
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-
-	go func() {
-		// Block until got a signal.
-		<-c
-		logger.AppLogger.Info("Gracefully shutting down...")
-		err = f.Shutdown()
-		if err != nil {
-			logger.AppLogger.Infof("Got error: %s while shutting down HTTP server", err)
-		}
-		os.Exit(0)
-	}()
-
-	return nil
+	//// gracefully shuts down  ...
+	//c := make(chan os.Signal, 1)
+	//signal.Notify(c, os.Interrupt)
+	//
+	//go func() {
+	//	// Block until got a signal.
+	//	<-c
+	//	logger.AppLogger.Info("Gracefully shutting down...")
+	//	err = f.Shutdown()
+	//	if err != nil {
+	//		logger.AppLogger.Infof("Got error: %s while shutting down HTTP server", err)
+	//	}
+	//	os.Exit(0)
+	//}()
+	//
+	//return nil
 }
