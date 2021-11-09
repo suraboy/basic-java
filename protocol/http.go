@@ -2,9 +2,12 @@ package protocol
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	recovery "github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
 	"github.com/suraboy/go-fiber-api/internal/handler/http"
 	route "github.com/suraboy/go-fiber-api/internal/routes"
+	"github.com/suraboy/go-fiber-api/pkg/middleware"
 	"log"
 	"os"
 )
@@ -30,12 +33,12 @@ func ServeREST() {
 	}
 
 	f := fiber.New()
-	//
-	//middleware := middleware.NewMiddleware()
-	//
-	//f.Use(middleware.LogRequest)
-	//f.Use(recovery.New())
-	//f.Use(cors.New())
+
+	middleware := middleware.NewMiddleware()
+
+	f.Use(middleware.LogRequest)
+	f.Use(recovery.New())
+	f.Use(cors.New())
 
 	v1 := f.Group("/v1")
 	v1.Get("/", func(c *fiber.Ctx) error {
