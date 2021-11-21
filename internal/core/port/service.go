@@ -23,6 +23,6 @@ type Service interface {
 	GetAllUser(request domain.User) ([]domain.User, error)
 	FindUserById(request domain.User) (domain.User, error)
 	CreateUser(request domain.User) (domain.User, error)
-	UpdateUserById(request domain.User) (domain.User, error)
-	DestroyUserById(request domain.User, id string) (domain.User, error)
+	UpdateUserById(request domain.User,id int) (domain.User, error)
+	DestroyUserById(id int) (domain.User, error)
 }

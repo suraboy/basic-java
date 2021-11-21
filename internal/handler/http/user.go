@@ -3,9 +3,9 @@ package http
 import (
 	"github.com/gofiber/fiber/v2"
 	"go-fiber-api/internal/core/domain"
-	"go-fiber-api/pkg/logger"
 	responseBody "go-fiber-api/pkg/util"
 	"net/http"
+	"strconv"
 )
 
 /*
@@ -67,36 +67,39 @@ func (hdl *Handler) CreateUser(c *fiber.Ctx) error {
 }
 
 func (hdl *Handler) UpdateUser(c *fiber.Ctx) error {
-	var req domain.User
-	logger.Infof("Request0 : %s",req )
-	if err := c.BodyParser(&req); err != nil {
-		logger.Infof("Request1 : %s",req )
+	paramID := c.Params("id")
+	id, err := strconv.Atoi(paramID)
+	if err != nil {
 		return responseBody.SendBadRequest(c,err)
 	}
 
-	logger.Infof("Request2 : %s",req )
-	err := hdl.validator.ValidateStruct(req)
+	var req domain.User
+	if err := c.BodyParser(&req); err != nil {
+		return responseBody.SendBadRequest(c,err)
+	}
+
+	err = hdl.validator.ValidateStruct(req)
 	if err != nil {
 		return responseBody.SendValidationError(c,err)
 	}
 
-	response, err := hdl.svc.UpdateUserById(req)
+	response, err := hdl.svc.UpdateUserById(req,id)
 	if err != nil {
-		return err
+		return responseBody.SendExceptionError(c,err)
 	}
 	return c.JSON(responseBody.RespondWithCollection(response))
 }
 
 func (hdl *Handler) DeleteUser(c *fiber.Ctx) error {
-	var req domain.User
-	id := c.Params("id")
-	if err := c.QueryParser(&req); err != nil {
-		return c.JSON(responseBody.SendBadRequest(c,err))
+	paramID := c.Params("id")
+	id, err := strconv.Atoi(paramID)
+	if err != nil {
+		return responseBody.SendBadRequest(c,err)
 	}
 
-	_, err := hdl.svc.DestroyUserById(req, id)
+	_, err = hdl.svc.DestroyUserById(id)
 	if err != nil {
-		return err
+		return responseBody.SendExceptionError(c,err)
 	}
 
 	return c.Status(http.StatusNoContent).JSON("")
