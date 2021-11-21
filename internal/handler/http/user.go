@@ -2,8 +2,8 @@ package http
 
 import (
 	"github.com/gofiber/fiber/v2"
-	domain "github.com/suraboy/go-fiber-api/internal/core/domain/models"
-	transform "github.com/suraboy/go-fiber-api/pkg/util"
+	domain "go-fiber-api/internal/core/domain/models"
+	transform "go-fiber-api/pkg/util"
 )
 
 /*

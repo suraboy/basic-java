@@ -29,11 +29,10 @@ func RespondWithCollection(result interface{}) *ResponseCollection {
 	}
 }
 
-func CustomResponse(httpCode int, message string, error string) MessageFormat {
+func CustomResponse(httpCode int, message string) MessageFormat {
 	var msgError MessageFormat
 	msgError.StatusCode = httpCode
 	msgError.Message = message
-	msgError.Error = error
 	MessageError.Errors = msgError
 	return msgError
 }

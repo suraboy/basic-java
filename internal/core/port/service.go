@@ -1,6 +1,6 @@
 package port
 
-import "github.com/suraboy/go-fiber-api/internal/core/domain/models"
+import "go-fiber-api/internal/core/domain/models"
 
 /*
 	|--------------------------------------------------------------------------

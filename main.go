@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/suraboy/go-fiber-api/protocol"
+	"go-fiber-api/cmd"
 )
 
 func main() {
-	protocol.ServeREST()
+	cmd.Execute()
 }

@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/suraboy/go-fiber-api/internal/core/domain/models"
+	"go-fiber-api/internal/core/domain/models"
 )
 
 /*

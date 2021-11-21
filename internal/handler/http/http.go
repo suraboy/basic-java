@@ -1,9 +1,9 @@
 package http
 
 import (
-	"github.com/suraboy/go-fiber-api/internal/core/port"
-	"github.com/suraboy/go-fiber-api/internal/core/service"
-	"github.com/suraboy/go-fiber-api/pkg/validators"
+	"go-fiber-api/internal/core/port"
+	"go-fiber-api/internal/core/service"
+	"go-fiber-api/pkg/validators"
 )
 
 /**

@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"github.com/suraboy/go-fiber-api/infrastructure"
 	"gorm.io/gorm"
 )
 
@@ -13,8 +12,7 @@ type Postgres struct {
 	Connection *gorm.DB
 }
 
-func NewPostgres() *Postgres {
-	conn := infrastructure.PostgresConnection()
+func NewPostgres(conn *gorm.DB) *Postgres {
 	return &Postgres{
 		Connection: conn,
 	}

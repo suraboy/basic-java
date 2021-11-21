@@ -1,54 +1,52 @@
 package config
 
 import (
-	"log"
+	"github.com/joho/godotenv"
+	"github.com/kelseyhightower/envconfig"
+	"strings"
 
-	"github.com/suraboy/go-fiber-api/pkg/logger"
-
-	"github.com/fsnotify/fsnotify"
-	"github.com/spf13/viper"
+	"go-fiber-api/pkg/logger"
 )
 
-// ",squash" will ignore mapstructure for that field
+// ",squash" will ignore envconfig for that field
 
 type Config struct {
-	App      appConfig      `mapstructure:",squash"`
-	Database databaseConfig `mapstructure:",squash"`
+	App      appConfig
+	Database databaseConfig
 }
 
 type appConfig struct {
-	HTTPPort string `mapstructure:"APP_HTTP_PORT"`
-	Env      string `mapstructure:"APP_ENV"`
+	HTTPPort string `envconfig:"APP_HTTP_PORT"`
+	Env      string `envconfig:"APP_ENV"`
+	APIKey   string `envconfig:"APP_API_KEY"`
 }
 
 type databaseConfig struct {
-	Host     string `mapstructure:"POSTGRES_HOST"`
-	Port     int64  `mapstructure:"POSTGRES_PORT"`
-	Database string `mapstructure:"POSTGRES_DBNAME"`
-	Username string `mapstructure:"POSTGRES_USER"`
-	Password string `mapstructure:"POSTGRES_PASSWORD"`
+	Host     string `envconfig:"POSTGRES_HOST"`
+	Port     int64  `envconfig:"POSTGRES_PORT"`
+	Database string `envconfig:"POSTGRES_DBNAME"`
+	Username string `envconfig:"POSTGRES_USER"`
+	Password string `envconfig:"POSTGRES_PASSWORD"`
 }
 
 var config Config
 
-func Init(cfgPath string) {
+// Init is application config initialization ...
+func Init() {
+	err := godotenv.Load()
+	if err != nil {
+		envFileNotFound := strings.Contains(err.Error(), "no such file or directory")
+		if !envFileNotFound {
+			logger.Infof("read config error: %v", err)
+		} else {
+			logger.Info("use environment from OS")
+		}
+	}
+	err = envconfig.Process("", &config)
+	if err != nil {
+		logger.Infof("parse config error: %v", err)
+	}
 
-	viper.SetConfigName(".env")
-	viper.AddConfigPath(".")
-	viper.SetConfigType("env")
-	viper.AutomaticEnv()
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
-	}
-	viper.WatchConfig()
-	viper.OnConfigChange(func(e fsnotify.Event) {
-		logger.AppLogger.Infof("Config file has changed: %s", e.Name)
-	})
-	err = viper.Unmarshal(&config)
-	if err != nil {
-		log.Fatalln(err)
-	}
 }
 
 func GetViper() *Config {

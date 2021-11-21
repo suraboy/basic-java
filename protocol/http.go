@@ -5,9 +5,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	recovery "github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
-	"github.com/suraboy/go-fiber-api/internal/handler/http"
-	route "github.com/suraboy/go-fiber-api/internal/routes"
-	"github.com/suraboy/go-fiber-api/pkg/middleware"
+	"go-fiber-api/internal/handler/http"
+	route "go-fiber-api/internal/routes"
 	"log"
 	"os"
 )
@@ -22,7 +21,7 @@ import (
 	|
 */
 
-func ServeREST() {
+func ServeREST() error {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -33,10 +32,6 @@ func ServeREST() {
 	}
 
 	f := fiber.New()
-
-	middleware := middleware.NewMiddleware()
-
-	f.Use(middleware.LogRequest)
 	f.Use(recovery.New())
 	f.Use(cors.New())
 
@@ -55,25 +50,12 @@ func ServeREST() {
 
 	hdl := http.NewHTTPHandler(app.svc, app.pkg.validator)
 	v1.Get("/healthcheck", hdl.HealthCheck)
+
 	route.UserV1Route(v1, hdl)
 
 	if err := f.Listen(":" + port); err != nil {
 		log.Fatalf("shutting down the server : %s", err)
 	}
-	//// gracefully shuts down  ...
-	//c := make(chan os.Signal, 1)
-	//signal.Notify(c, os.Interrupt)
-	//
-	//go func() {
-	//	// Block until got a signal.
-	//	<-c
-	//	logger.AppLogger.Info("Gracefully shutting down...")
-	//	err = f.Shutdown()
-	//	if err != nil {
-	//		logger.AppLogger.Infof("Got error: %s while shutting down HTTP server", err)
-	//	}
-	//	os.Exit(0)
-	//}()
-	//
-	//return nil
+
+	return nil
 }

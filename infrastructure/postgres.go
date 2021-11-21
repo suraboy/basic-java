@@ -3,7 +3,6 @@ package infrastructure
 import (
 	"fmt"
 	"github.com/sirupsen/logrus"
-	"github.com/suraboy/go-fiber-api/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -12,15 +11,23 @@ import (
 )
 
 
-func PostgresConnection() *gorm.DB {
+type Config struct {
+	Username string
+	Password string
+	Host     string
+	Port     int64
+	Database string
+}
+
+func PostgresConnection(config Config) *gorm.DB {
 	log.Print("Connecting to PostgreSQL DB...")
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%v TimeZone=Asia/Bangkok",
-		config.GetViper().Database.Host,
-		config.GetViper().Database.Username,
-		config.GetViper().Database.Password,
-		config.GetViper().Database.Database,
-		config.GetViper().Database.Port,
+		config.Host,
+		config.Username,
+		config.Password,
+		config.Database,
+		config.Port,
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{

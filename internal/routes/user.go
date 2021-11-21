@@ -2,13 +2,15 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/suraboy/go-fiber-api/internal/handler/http"
+	"go-fiber-api/internal/handler/http"
+	"go-fiber-api/pkg/middleware"
 )
 
 func UserV1Route(v1 fiber.Router, hdl *http.HTTPHandler) {
+	middleware := middleware.NewMiddleware()
 	r := v1.Group("/users")
-	r.Get("", hdl.GetAllUser)
-	r.Get("/:id", hdl.FindUserById)
+	r.Get("", middleware.ApiKeyAccess, hdl.GetAllUser)
+	r.Get("/:id", middleware.ApiKeyAccess, hdl.FindUserById)
 	//r.Post("", hdl.CreateUser)
 	//r.Put("/:id", hdl.UpdateUser)
 	//r.Delete("/:id", hdl.DeleteUser)

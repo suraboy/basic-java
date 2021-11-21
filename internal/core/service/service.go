@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/suraboy/go-fiber-api/internal/core/port"
+	"go-fiber-api/internal/core/port"
 )
 
 /*
@@ -13,12 +13,16 @@ import (
 	|
 */
 
-type Service struct {
-	repository       port.Repository
+type Config struct {
+	Repository port.Repository
 }
 
-func New(repo port.Repository) *Service {
+type Service struct {
+	repository port.Repository
+}
+
+func New(cfg Config) *Service {
 	return &Service{
-		repository:   repo,
+		repository: cfg.Repository,
 	}
 }

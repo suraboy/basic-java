@@ -8,51 +8,66 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+type HTTPLog struct {
+	IP,
+	Method,
+	Path,
+	RequestBody,
+	Query,
+	ResponseBody string
+	Status int
+}
+
 var (
-	zapLog    *zap.Logger
-	AppLogger *Logger
+	zapLog *zap.SugaredLogger
 )
 
-type Logger struct {
-	logger *zap.SugaredLogger
-}
-
+// Init ...
+// initial log
 func Init() {
-	initZap()
-	AppLogger = &Logger{logger: zapLog.Sugar()}
-}
-
-func initZap() {
 	var err error
 	loggerConfig := zap.NewProductionConfig()
 	loggerConfig.EncoderConfig.TimeKey = "timestamp"
 	loggerConfig.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-	zapLog, err = loggerConfig.Build()
+	loggerConfig.EncoderConfig.StacktraceKey = ""
+	defaultLog, err := loggerConfig.Build(zap.AddCallerSkip(1))
 	if err != nil {
-		log.Fatalln("Got error while building zap config.")
+		log.Fatalln("Got error while building zap logger config.")
 		return
 	}
+	zapLog = defaultLog.Sugar()
 	return
 }
 
-func (l *Logger) Request(IP, method, path, body, query string) {
-	l.logger.Infow(fmt.Sprintf("request method %s path %s", method, path),
-		"IP", IP,
-		"method", method,
-		"path", path,
-		"body", body,
-		"query", query,
+// HTTP ...
+// log http information
+func HTTP(info HTTPLog) {
+	zapLog.Infow(fmt.Sprintf("request method %s path %s", info.Method, info.Path),
+		"IP", info.IP,
+		"method", info.Method,
+		"path", info.Path,
+		"requestBody", info.RequestBody,
+		"query", info.Query,
+		"responseBody", info.ResponseBody,
 	)
+	defer zapLog.Sync()
 }
 
-func (l *Logger) Infof(format string, v ...interface{}) {
-	l.logger.Infof(format, v...)
+func Infof(format string, args ...interface{}) {
+	zapLog.Infof(format, args...)
+	defer zapLog.Sync()
 }
 
-func (l *Logger) Info(msg string) {
-	l.logger.Info(msg)
+func Info(args ...interface{}) {
+	zapLog.Info(args)
+	defer zapLog.Sync()
 }
 
-func (l *Logger) Error(v ...interface{}) {
-	l.logger.Error(v)
+func Fatalf(format string, args ...interface{}) {
+	zapLog.Fatalf(format, args)
+	defer zapLog.Sync()
+}
+func Error(args ...interface{}) {
+	zapLog.Error(args)
+	defer zapLog.Sync()
 }

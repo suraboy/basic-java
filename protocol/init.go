@@ -1,15 +1,13 @@
 package protocol
 
 import (
-	"github.com/suraboy/go-fiber-api/config"
-	"github.com/suraboy/go-fiber-api/internal/core/service"
-	"github.com/suraboy/go-fiber-api/internal/repository/postgres"
-	"github.com/suraboy/go-fiber-api/pkg/logger"
-	"github.com/suraboy/go-fiber-api/pkg/validators"
+	"go-fiber-api/config"
+	"go-fiber-api/infrastructure"
+	"go-fiber-api/internal/core/service"
+	"go-fiber-api/internal/repository/postgres"
+	"go-fiber-api/pkg/logger"
+	"go-fiber-api/pkg/validators"
 )
-
-// export `CfgPath` to set config path from cmd/root.go
-var CfgPath string
 
 var app *application
 
@@ -26,15 +24,33 @@ type packages struct {
 
 func init() {
 	logger.Init()
-	config.Init(CfgPath)
+	config.Init()
 	packages := packages{
 		validator: validators.NewValidator(),
 	}
 
-	repo := postgres.NewPostgres()
+	// establish connections ...
+	var (
+		dbConn = infrastructure.PostgresConnection(infrastructure.Config{
+			Username: config.GetViper().Database.Username,
+			Password: config.GetViper().Database.Password,
+			Host:     config.GetViper().Database.Host,
+			Port:     config.GetViper().Database.Port,
+			Database: config.GetViper().Database.Database,
+		})
+	)
+
+	// repositories ...
+	var (
+		repo = postgres.NewPostgres(dbConn)
+	)
+
+	svc := service.New(service.Config{
+		Repository: repo,
+	})
 
 	app = &application{
-		svc: service.New(repo),
+		svc: svc,
 		pkg: packages,
 	}
 }
