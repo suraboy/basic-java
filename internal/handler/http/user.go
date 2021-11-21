@@ -3,7 +3,9 @@ package http
 import (
 	"github.com/gofiber/fiber/v2"
 	"go-fiber-api/internal/core/domain"
-	transform "go-fiber-api/pkg/util"
+	"go-fiber-api/pkg/logger"
+	responseBody "go-fiber-api/pkg/util"
+	"net/http"
 )
 
 /*
@@ -20,27 +22,82 @@ import (
 func (hdl *Handler) GetAllUser(c *fiber.Ctx) error {
 	var req domain.User
 	if err := c.QueryParser(&req); err != nil {
-		return transform.SendBadRequest(c,err)
+		return responseBody.SendBadRequest(err)
 	}
 
-	response, err := hdl.svc.GetAllUser(&req)
+	response, err := hdl.svc.GetAllUser(req)
 	if err != nil {
-		return transform.SendNotFound(c)
+		return responseBody.SendNotFound()
 	}
 
-	return c.JSON(transform.RespondWithCollection(response))
+	return c.JSON(responseBody.RespondWithCollection(response))
 }
 
 func (hdl *Handler) FindUserById(c *fiber.Ctx) error {
 	var req domain.User
 	if err := c.QueryParser(&req); err != nil {
-		return c.JSON(transform.SendBadRequest(c,err))
+		return responseBody.SendBadRequest(err)
 	}
 
-	response, err := hdl.svc.FindUserById(&req)
+	response, err := hdl.svc.FindUserById(req)
 	if err != nil {
-		return transform.SendNotFound(c)
+		return responseBody.SendNotFound()
 	}
 
-	return c.JSON(transform.RespondWithCollection(response))
+	return c.JSON(responseBody.RespondWithCollection(response))
+}
+
+func (hdl *Handler) CreateUser(c *fiber.Ctx) error {
+	var req domain.User
+	if err := c.BodyParser(&req); err != nil {
+		return responseBody.SendBadRequest(err)
+	}
+
+	err := hdl.validator.ValidateStruct(req)
+	if err != nil {
+		return responseBody.SendValidationError(err)
+	}
+
+	response, err := hdl.svc.CreateUser(req)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(responseBody.RespondWithCollection(response))
+}
+
+func (hdl *Handler) UpdateUser(c *fiber.Ctx) error {
+	var req domain.User
+	logger.Infof("Request0 : %s",req )
+	if err := c.BodyParser(&req); err != nil {
+		logger.Infof("Request1 : %s",req )
+		return responseBody.SendBadRequest(err)
+	}
+
+	logger.Infof("Request2 : %s",req )
+	err := hdl.validator.ValidateStruct(req)
+	if err != nil {
+		return responseBody.SendValidationError(err)
+	}
+
+	response, err := hdl.svc.UpdateUserById(req)
+	if err != nil {
+		return err
+	}
+	return c.JSON(responseBody.RespondWithCollection(response))
+}
+
+func (hdl *Handler) DeleteUser(c *fiber.Ctx) error {
+	var req domain.User
+	id := c.Params("id")
+	if err := c.QueryParser(&req); err != nil {
+		return c.JSON(responseBody.SendBadRequest(err))
+	}
+
+	_, err := hdl.svc.DestroyUserById(req, id)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(http.StatusNoContent).JSON("")
 }

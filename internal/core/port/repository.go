@@ -15,6 +15,10 @@ import (
 */
 
 type Repository interface {
-	GetUsers(request *domain.User) ([]domain.User, error)
-	FindUser(request *domain.User) (domain.User, error)
+	// GetUsers FindUser CreateUser UpdateUser DeleteUser feature: users
+	GetUsers(request domain.User) ([]domain.User, error)
+	FindUser(request domain.User) (domain.User, error)
+	CreateUser(request domain.User) (domain.User, error)
+	UpdateUser(request domain.User) (domain.User, error)
+	DeleteUser(request domain.User, id string) (domain.User, error)
 }

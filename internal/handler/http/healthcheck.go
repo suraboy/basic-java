@@ -3,6 +3,7 @@ package http
 import (
 	"github.com/gofiber/fiber/v2"
 	"go-fiber-api/config"
+	"go-fiber-api/internal/core/domain"
 	"go-fiber-api/pkg/util"
 )
 
@@ -20,7 +21,7 @@ func (hdl *Handler) CheckVersion(c *fiber.Ctx) error {
 	response.Version = config.GetViper().App.AppVersion
 	response.Database = "OK"
 	//check connection database
-	_, err := hdl.svc.GetAllUser(nil)
+	_, err := hdl.svc.GetAllUser(domain.User{})
 	if err != nil {
 		response.Database = "Not OK"
 	}

@@ -13,6 +13,6 @@ import (
 func AuthV1Route(v1 fiber.Router, hdl *http.Handler) {
 	r := v1.Group("/oauth")
 	r.Post("/login", hdl.Authenticate)
-	//r.Put("/:id", hdl.UpdateUser)
-	//r.Delete("/:id", hdl.DeleteUser)
+	r.Post("/refresh", hdl.RefreshToken)
+	r.Delete("/logout", hdl.Logout)
 }

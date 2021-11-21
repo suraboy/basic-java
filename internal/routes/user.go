@@ -14,8 +14,8 @@ func UserV1Route(v1 fiber.Router, hdl *http.Handler) {
 	{
 		private.Get("", hdl.GetAllUser)
 		private.Get("/:id", hdl.FindUserById)
-		//r.Post("", hdl.CreateUser)
-		//r.Put("/:id", hdl.UpdateUser)
-		//r.Delete("/:id", hdl.DeleteUser)
+		private.Post("", hdl.CreateUser)
+		private.Put("/:id", hdl.UpdateUser)
+		private.Delete("/:id", hdl.DeleteUser)
 	}
 }

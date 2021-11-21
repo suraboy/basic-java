@@ -26,7 +26,7 @@ func (mdw *middleware) JWTMiddleware(router fiber.Router) fiber.Router {
 }
 
 func AuthError(c *fiber.Ctx, e error) error {
-	return responseBody.SendUnauthorized(c)
+	return responseBody.SendUnauthorized()
 }
 func AuthSuccess(c *fiber.Ctx) error {
 	return c.Next()
