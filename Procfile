@@ -1,2 +1,2 @@
-web: bin/go-fiber-api
+web: bin/go-fiber-api serve-rest
 
