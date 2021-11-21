@@ -1,7 +1,7 @@
 package validators_test
 
 import (
-	"kkp-api/pkg/validators"
+	"go-fiber-api/pkg/validators"
 	"os"
 	"testing"
 

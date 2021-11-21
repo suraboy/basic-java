@@ -1,6 +1,8 @@
 package port
 
-import "go-fiber-api/internal/core/domain/models"
+import (
+	"go-fiber-api/internal/core/domain"
+)
 
 /*
 	|--------------------------------------------------------------------------
@@ -13,6 +15,6 @@ import "go-fiber-api/internal/core/domain/models"
 */
 
 type Service interface {
-	GetAllUser(request *models.User) ([]models.User, error)
-	FindUserById(request *models.User) (models.User, error)
+	GetAllUser(request *domain.User) ([]domain.User, error)
+	FindUserById(request *domain.User) (domain.User, error)
 }

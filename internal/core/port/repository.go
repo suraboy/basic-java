@@ -1,6 +1,8 @@
 package port
 
-import "go-fiber-api/internal/core/domain/models"
+import (
+	"go-fiber-api/internal/core/domain"
+)
 
 /*
 	|--------------------------------------------------------------------------
@@ -13,6 +15,6 @@ import "go-fiber-api/internal/core/domain/models"
 */
 
 type Repository interface {
-	GetUsers(request *models.User) ([]models.User, error)
-	FindUser(request *models.User) (models.User, error)
+	GetUsers(request *domain.User) ([]domain.User, error)
+	FindUser(request *domain.User) (domain.User, error)
 }

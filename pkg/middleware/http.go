@@ -1,48 +1,33 @@
 package middleware
 
 import (
-	"go-fiber-api/config"
-	"go-fiber-api/pkg/logger"
-	"go-fiber-api/pkg/util"
-
 	"github.com/gofiber/fiber/v2"
+	jwtware "github.com/gofiber/jwt/v2"
+	responseBody "go-fiber-api/pkg/util"
 )
 
 type Middleware interface {
-	Logger() fiber.Handler
-	ApiKeyAccess(c *fiber.Ctx) error
+	JWTMiddleware(*fiber.Router) fiber.Router
 }
 
 type middleware struct{}
 
-func NewMiddleware() Middleware {
+func NewMiddleware() *middleware {
 	return &middleware{}
 }
 
-func (mdw *middleware) Logger() fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		err := c.Next()
-		logger.HTTP(logger.HTTPLog{
-			IP:           c.IP(),
-			Method:       c.Method(),
-			Path:         c.Path(),
-			RequestBody:  string(c.Request().Body()),
-			Query:        string(c.Request().URI().QueryString()),
-			ResponseBody: string(c.Response().Body()),
-			Status:       c.Response().StatusCode(),
-		})
-		return err
-	}
-
+func (mdw *middleware) JWTMiddleware(router fiber.Router) fiber.Router {
+	return router.Use(jwtware.New(jwtware.Config{
+		SuccessHandler: AuthSuccess,
+		ErrorHandler:   AuthError,
+		SigningKey:     []byte("secret"),
+		SigningMethod:  "HS256",
+	}))
 }
 
-func (mdw *middleware) ApiKeyAccess(c *fiber.Ctx) error {
-	header := c.Get("x-api-key")
-	apiKey := config.GetViper().App.APIKey
-
-	if header != apiKey {
-		return c.Status(401).JSON(util.CustomResponse(401, "Unauthorized"))
-	}
-
+func AuthError(c *fiber.Ctx, e error) error {
+	return responseBody.SendUnauthorized(c)
+}
+func AuthSuccess(c *fiber.Ctx) error {
 	return c.Next()
 }

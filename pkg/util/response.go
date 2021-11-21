@@ -11,8 +11,8 @@ var MessageError struct {
 
 type MessageFormat struct {
 	StatusCode int    `json:"status_code"`
-	Message    string `json:"message"`
-	Error      string `json:"error"`
+	Message    string `json:"message,omitempty"`
+	Error      string `json:"error,omitempty"`
 }
 
 type ResponseCollection struct {
@@ -41,6 +41,15 @@ func SendNotFound(c *fiber.Ctx) error {
 	var msgError MessageFormat
 	msgError.StatusCode = http.StatusNotFound
 	msgError.Message = "Not Found"
+	MessageError.Errors = msgError
+
+	return c.Status(MessageError.Errors.StatusCode).JSON(MessageError)
+}
+
+func SendUnauthorized(c *fiber.Ctx) error {
+	var msgError MessageFormat
+	msgError.StatusCode = http.StatusUnauthorized
+	msgError.Message = "Unauthorized"
 	MessageError.Errors = msgError
 
 	return c.Status(MessageError.Errors.StatusCode).JSON(MessageError)

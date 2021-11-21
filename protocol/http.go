@@ -4,11 +4,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	recovery "github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/joho/godotenv"
+	"go-fiber-api/config"
 	"go-fiber-api/internal/handler/http"
 	route "go-fiber-api/internal/routes"
 	"log"
-	"os"
 )
 
 /*
@@ -22,38 +21,32 @@ import (
 */
 
 func ServeREST() error {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatalf("$PORT must be set : %s", port)
-	}
+	f := fiber.New(fiber.Config{
+		DisableKeepalive: false,
+	})
 
-	f := fiber.New()
 	f.Use(recovery.New())
 	f.Use(cors.New())
 
-	v1 := f.Group("/v1")
-	v1.Get("/", func(c *fiber.Ctx) error {
+	f.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World 👋!")
 	})
-	//check version project
-	v1.Get("/version", func(c *fiber.Ctx) error {
-		return c.Send([]byte(os.Getenv("TAG_VERSION")))
-	})
 
+	hdl := http.NewHandler(app.svc, app.pkg.validator)
+	//health-check project
+	f.Get("/healthcheck", hdl.HealthCheck)
+	//check version project
+	f.Get("/version", hdl.CheckVersion)
+
+	v1 := f.Group("/v1")
 	v1.Static("/", "./storage/images", fiber.Static{
 		Index: "",
 	})
 
-	hdl := http.NewHTTPHandler(app.svc, app.pkg.validator)
-	v1.Get("/healthcheck", hdl.HealthCheck)
-
+	route.AuthV1Route(v1, hdl)
 	route.UserV1Route(v1, hdl)
 
-	if err := f.Listen(":" + port); err != nil {
+	if err := f.Listen(":" + config.GetViper().App.Port); err != nil {
 		log.Fatalf("shutting down the server : %s", err)
 	}
 

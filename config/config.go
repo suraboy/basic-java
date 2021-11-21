@@ -16,9 +16,10 @@ type Config struct {
 }
 
 type appConfig struct {
-	HTTPPort string `envconfig:"APP_HTTP_PORT"`
-	Env      string `envconfig:"APP_ENV"`
-	APIKey   string `envconfig:"APP_API_KEY"`
+	Port       string  `envconfig:"PORT"`
+	AppVersion string `envconfig:"APP_VERSION"`
+	Env        string  `envconfig:"APP_ENV"`
+	APIKey     string  `envconfig:"APP_API_KEY"`
 }
 
 type databaseConfig struct {

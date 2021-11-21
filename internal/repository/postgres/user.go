@@ -1,15 +1,15 @@
 package postgres
 
 import (
-	"go-fiber-api/internal/core/domain/models"
+	"go-fiber-api/internal/core/domain"
 )
 
 /**
  * Created by boy.sirichai on 8/11/2021 AD
  */
 
-func (r *Postgres) GetUsers(request *models.User) ([]models.User, error) {
-	var model []models.User
+func (r *Postgres) GetUsers(request *domain.User) ([]domain.User, error) {
+	var model []domain.User
 	response := r.Connection.
 		Table("users").
 		Order("created_at desc").
@@ -17,8 +17,8 @@ func (r *Postgres) GetUsers(request *models.User) ([]models.User, error) {
 	return model, response.Error
 }
 
-func (r *Postgres) FindUser(request *models.User) (models.User, error) {
-	var model models.User
+func (r *Postgres) FindUser(request *domain.User) (domain.User, error) {
+	var model domain.User
 	response := r.Connection.
 		Table("users").
 		First(&model, &request)

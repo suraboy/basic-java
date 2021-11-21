@@ -2,7 +2,7 @@ package http
 
 import (
 	"github.com/gofiber/fiber/v2"
-	domain "go-fiber-api/internal/core/domain/models"
+	"go-fiber-api/internal/core/domain"
 	transform "go-fiber-api/pkg/util"
 )
 
@@ -17,10 +17,10 @@ import (
 	|
 */
 
-func (hdl *HTTPHandler) GetAllUser(c *fiber.Ctx) error {
+func (hdl *Handler) GetAllUser(c *fiber.Ctx) error {
 	var req domain.User
 	if err := c.QueryParser(&req); err != nil {
-		return c.JSON(transform.SendBadRequest(c,err))
+		return transform.SendBadRequest(c,err)
 	}
 
 	response, err := hdl.svc.GetAllUser(&req)
@@ -31,7 +31,7 @@ func (hdl *HTTPHandler) GetAllUser(c *fiber.Ctx) error {
 	return c.JSON(transform.RespondWithCollection(response))
 }
 
-func (hdl *HTTPHandler) FindUserById(c *fiber.Ctx) error {
+func (hdl *Handler) FindUserById(c *fiber.Ctx) error {
 	var req domain.User
 	if err := c.QueryParser(&req); err != nil {
 		return c.JSON(transform.SendBadRequest(c,err))

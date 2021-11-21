@@ -1,7 +1,7 @@
 package service
 
 import (
-	"go-fiber-api/internal/core/domain/models"
+	"go-fiber-api/internal/core/domain"
 )
 
 /*
@@ -13,10 +13,10 @@ import (
 	|
 */
 
-func (s Service) GetAllUser(request *models.User) ([]models.User, error) {
+func (s Service) GetAllUser(request *domain.User) ([]domain.User, error) {
 	return s.repository.GetUsers(request)
 }
 
-func (s Service) FindUserById(request *models.User) (models.User, error) {
+func (s Service) FindUserById(request *domain.User) (domain.User, error) {
 	return s.repository.FindUser(request)
 }

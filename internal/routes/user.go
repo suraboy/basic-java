@@ -6,12 +6,16 @@ import (
 	"go-fiber-api/pkg/middleware"
 )
 
-func UserV1Route(v1 fiber.Router, hdl *http.HTTPHandler) {
+func UserV1Route(v1 fiber.Router, hdl *http.Handler) {
+	public := v1.Group("/users")
+	//private route
 	middleware := middleware.NewMiddleware()
-	r := v1.Group("/users")
-	r.Get("", middleware.ApiKeyAccess, hdl.GetAllUser)
-	r.Get("/:id", middleware.ApiKeyAccess, hdl.FindUserById)
-	//r.Post("", hdl.CreateUser)
-	//r.Put("/:id", hdl.UpdateUser)
-	//r.Delete("/:id", hdl.DeleteUser)
+	private := middleware.JWTMiddleware(public)
+	{
+		private.Get("", hdl.GetAllUser)
+		private.Get("/:id", hdl.FindUserById)
+		//r.Post("", hdl.CreateUser)
+		//r.Put("/:id", hdl.UpdateUser)
+		//r.Delete("/:id", hdl.DeleteUser)
+	}
 }
