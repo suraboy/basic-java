@@ -13,12 +13,12 @@ import (
 func (hdl *Handler) Authenticate(c *fiber.Ctx) error {
 	var req domain.SignIn
 	if err := c.BodyParser(&req); err != nil {
-		return responseBody.SendBadRequest(err)
+		return responseBody.SendBadRequest(c,err)
 	}
 
 	err := hdl.validator.ValidateStruct(req)
 	if err != nil {
-		return responseBody.SendValidationError(err)
+		return responseBody.SendValidationError(c,err)
 	}
 	//check user exits
 	res, err := hdl.svc.SignIn(req)
@@ -32,12 +32,12 @@ func (hdl *Handler) Authenticate(c *fiber.Ctx) error {
 func (hdl *Handler) RefreshToken(c *fiber.Ctx) error {
 	var req domain.RefreshToken
 	if err := c.BodyParser(&req); err != nil {
-		return responseBody.SendBadRequest(err)
+		return responseBody.SendBadRequest(c,err)
 	}
 
 	err := hdl.validator.ValidateStruct(req)
 	if err != nil {
-		return responseBody.SendValidationError(err)
+		return responseBody.SendValidationError(c,err)
 	}
 
 	res, err := hdl.svc.RefreshToken(req)

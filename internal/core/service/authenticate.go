@@ -21,18 +21,18 @@ func (s Service) SignIn(req domain.SignIn) (domain.Token, error) {
 	user.Username = req.Username
 	userInfo, err := s.repository.FindUser(user)
 	if err != nil {
-		return domain.Token{}, responseBody.SendNotFound()
+		return domain.Token{}, responseBody.SendNotFound(c)
 	}
 	//compare password
 	err = bcrypt.CompareHashAndPassword([]byte(userInfo.Password), []byte(req.Password))
 	if err != nil {
-		return domain.Token{}, responseBody.SendUnauthorized()
+		return domain.Token{}, responseBody.SendUnauthorized(c)
 	}
 	//generate token
 	res, err := GenerateAccessToken(userInfo)
 
 	if err != nil {
-		return domain.Token{}, responseBody.SendInternalServerError(err)
+		return domain.Token{}, responseBody.SendInternalServerError(c,err)
 	}
 
 	return res, nil
@@ -49,13 +49,13 @@ func (s Service) RefreshToken(req domain.RefreshToken) (domain.Token, error) {
 	})
 
 	if err != nil {
-		return domain.Token{}, responseBody.SendBadRequest(err)
+		return domain.Token{}, responseBody.SendBadRequest(c,err)
 	} else if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		// Get the user record from database or
 		// run through your business logic to verify if the user can log in
 		uid, ok := claims["sub"].(string)
 		if !ok {
-			return domain.Token{}, responseBody.SendBadRequest(err)
+			return domain.Token{}, responseBody.SendBadRequest(c,err)
 		}
 		var user domain.User
 		user.Uuid = uid
@@ -63,17 +63,17 @@ func (s Service) RefreshToken(req domain.RefreshToken) (domain.Token, error) {
 		userInfo, err := s.repository.FindUser(user)
 
 		if err != nil {
-			return domain.Token{}, responseBody.SendNotFound()
+			return domain.Token{}, responseBody.SendNotFound(c)
 		}
 
 		res, err := GenerateAccessToken(userInfo)
 
 		if err != nil {
-			return domain.Token{}, responseBody.SendInternalServerError(err)
+			return domain.Token{}, responseBody.SendInternalServerError(c,err)
 		}
 		return res, nil
 	} else {
-		return domain.Token{}, responseBody.SendTokenExpired()
+		return domain.Token{}, responseBody.SendTokenExpired(c)
 	}
 }
 

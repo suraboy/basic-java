@@ -27,14 +27,14 @@ func (s Service) FindUserById(request domain.User) (domain.User, error) {
 func (s Service) CreateUser(request domain.User) (domain.User, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return domain.User{}, responseBody.SendInternalServerError(err)
+		return domain.User{}, responseBody.SendInternalServerError(c,err)
 	}
 	request.Uuid = utils.UUID()
 	request.Password = string(hashedPassword)
 	res, err := s.repository.CreateUser(request)
 
 	if err != nil {
-		return domain.User{}, responseBody.SendExceptionError(err)
+		return domain.User{}, responseBody.SendExceptionError(c,err)
 	}
 	return res, nil
 }
@@ -43,14 +43,14 @@ func (s Service) UpdateUserById(request domain.User) (domain.User, error) {
 	if request.Password != "" {
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 		if err != nil {
-			return domain.User{}, responseBody.SendInternalServerError(err)
+			return domain.User{}, responseBody.SendInternalServerError(c,err)
 		}
 		request.Password = string(hashedPassword)
 	}
 
 	res, err := s.repository.UpdateUser(request)
 	if err != nil {
-		return domain.User{}, responseBody.SendExceptionError(err)
+		return domain.User{}, responseBody.SendExceptionError(c,err)
 	}
 	return res, nil
 }
@@ -58,7 +58,7 @@ func (s Service) UpdateUserById(request domain.User) (domain.User, error) {
 func (s Service) DestroyUserById(request domain.User, id string) (domain.User, error) {
 	res, err := s.repository.DeleteUser(request, id)
 	if err != nil {
-		return domain.User{}, responseBody.SendExceptionError(err)
+		return domain.User{}, responseBody.SendExceptionError(c,err)
 	}
 	return res, nil
 }

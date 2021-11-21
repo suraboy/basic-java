@@ -22,12 +22,12 @@ import (
 func (hdl *Handler) GetAllUser(c *fiber.Ctx) error {
 	var req domain.User
 	if err := c.QueryParser(&req); err != nil {
-		return responseBody.SendBadRequest(err)
+		return responseBody.SendBadRequest(c,err)
 	}
 
 	response, err := hdl.svc.GetAllUser(req)
 	if err != nil {
-		return responseBody.SendNotFound()
+		return responseBody.SendNotFound(c)
 	}
 
 	return c.JSON(responseBody.RespondWithCollection(response))
@@ -36,12 +36,12 @@ func (hdl *Handler) GetAllUser(c *fiber.Ctx) error {
 func (hdl *Handler) FindUserById(c *fiber.Ctx) error {
 	var req domain.User
 	if err := c.QueryParser(&req); err != nil {
-		return responseBody.SendBadRequest(err)
+		return responseBody.SendBadRequest(c,err)
 	}
 
 	response, err := hdl.svc.FindUserById(req)
 	if err != nil {
-		return responseBody.SendNotFound()
+		return responseBody.SendNotFound(c)
 	}
 
 	return c.JSON(responseBody.RespondWithCollection(response))
@@ -50,12 +50,12 @@ func (hdl *Handler) FindUserById(c *fiber.Ctx) error {
 func (hdl *Handler) CreateUser(c *fiber.Ctx) error {
 	var req domain.User
 	if err := c.BodyParser(&req); err != nil {
-		return responseBody.SendBadRequest(err)
+		return responseBody.SendBadRequest(c,err)
 	}
 
 	err := hdl.validator.ValidateStruct(req)
 	if err != nil {
-		return responseBody.SendValidationError(err)
+		return responseBody.SendValidationError(c,err)
 	}
 
 	response, err := hdl.svc.CreateUser(req)
@@ -71,13 +71,13 @@ func (hdl *Handler) UpdateUser(c *fiber.Ctx) error {
 	logger.Infof("Request0 : %s",req )
 	if err := c.BodyParser(&req); err != nil {
 		logger.Infof("Request1 : %s",req )
-		return responseBody.SendBadRequest(err)
+		return responseBody.SendBadRequest(c,err)
 	}
 
 	logger.Infof("Request2 : %s",req )
 	err := hdl.validator.ValidateStruct(req)
 	if err != nil {
-		return responseBody.SendValidationError(err)
+		return responseBody.SendValidationError(c,err)
 	}
 
 	response, err := hdl.svc.UpdateUserById(req)
@@ -91,7 +91,7 @@ func (hdl *Handler) DeleteUser(c *fiber.Ctx) error {
 	var req domain.User
 	id := c.Params("id")
 	if err := c.QueryParser(&req); err != nil {
-		return c.JSON(responseBody.SendBadRequest(err))
+		return c.JSON(responseBody.SendBadRequest(c,err))
 	}
 
 	_, err := hdl.svc.DestroyUserById(req, id)

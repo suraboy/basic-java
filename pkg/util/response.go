@@ -19,8 +19,6 @@ type ResponseCollection struct {
 	Data interface{} `json:"data"`
 }
 
-var c *fiber.Ctx
-
 func RespondWithCollection(result interface{}) *ResponseCollection {
 	if result == nil {
 		type Empty struct{}
@@ -39,7 +37,7 @@ func CustomResponse(httpCode int, message string) MessageFormat {
 	return msgError
 }
 
-func SendNotFound() error {
+func SendNotFound(c *fiber.Ctx) error {
 	var msgError MessageFormat
 	msgError.StatusCode = http.StatusNotFound
 	msgError.Message = "Not Found"
@@ -48,7 +46,7 @@ func SendNotFound() error {
 	return c.Status(MessageError.Errors.StatusCode).JSON(MessageError)
 }
 
-func SendUnauthorized() error {
+func SendUnauthorized(c *fiber.Ctx) error {
 	var msgError MessageFormat
 	msgError.StatusCode = http.StatusUnauthorized
 	msgError.Message = "Unauthorized"
@@ -57,7 +55,7 @@ func SendUnauthorized() error {
 	return c.Status(MessageError.Errors.StatusCode).JSON(MessageError)
 }
 
-func SendTokenExpired() error {
+func SendTokenExpired(c *fiber.Ctx) error {
 	var msgError MessageFormat
 	msgError.StatusCode = http.StatusUnauthorized
 	msgError.Message = "Token Expired"
@@ -66,7 +64,7 @@ func SendTokenExpired() error {
 	return c.Status(MessageError.Errors.StatusCode).JSON(MessageError)
 }
 
-func SendInternalServerError(err error) error {
+func SendInternalServerError(c *fiber.Ctx, err error) error {
 	var msgError MessageFormat
 	msgError.StatusCode = http.StatusInternalServerError
 	msgError.Message = "Internal Server Error"
@@ -76,7 +74,7 @@ func SendInternalServerError(err error) error {
 	return c.Status(MessageError.Errors.StatusCode).JSON(MessageError)
 }
 
-func SendBadRequest(err error) error {
+func SendBadRequest(c *fiber.Ctx, err error) error {
 	var msgError MessageFormat
 	msgError.StatusCode = http.StatusBadRequest
 	msgError.Message = "Bad Request"
@@ -86,7 +84,7 @@ func SendBadRequest(err error) error {
 	return c.Status(MessageError.Errors.StatusCode).JSON(MessageError)
 }
 
-func SendValidationError(err error) error {
+func SendValidationError(c *fiber.Ctx, err error) error {
 	var msgError MessageFormat
 	msgError.StatusCode = http.StatusUnprocessableEntity
 	msgError.Message = "The given data was invalid."
@@ -97,7 +95,7 @@ func SendValidationError(err error) error {
 }
 
 
-func SendExceptionError(err error) error {
+func SendExceptionError(c *fiber.Ctx,err error) error {
 	var msgError MessageFormat
 	msgError.StatusCode = http.StatusExpectationFailed
 	msgError.Message = "Expectation Failed"
