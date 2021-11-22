@@ -18,7 +18,7 @@ https://github.com/suraboy/go-fiber-api.git
 .
 ├── cmd                     # Application entry point
 ├── config                  # Application configuration
-├── databese                # Database schema example.
+├── infrastructure          # Database schema example.
 ├── docker                  # Build files for instance Dockerfile.
 ├── internal                # Golang's standard internal package
 │   ├── core     
