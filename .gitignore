@@ -5,3 +5,5 @@ README.md
 main
 .env
 .env.local
+docker-compose.yml
+coverage.out

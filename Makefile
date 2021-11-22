@@ -14,3 +14,7 @@ heroku: $(DOCKER_CMD)
 
 start:
 	go run ./main.go serve-rest
+
+.PHONY: test
+test:
+	go test ./... -coverprofile coverage.out
