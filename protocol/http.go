@@ -45,6 +45,7 @@ func ServeREST() error {
 
 	route.AuthV1Route(v1, hdl)
 	route.UserV1Route(v1, hdl)
+	route.ProductV1Route(v1, hdl)
 
 	if err := f.Listen(":" + config.GetViper().App.Port); err != nil {
 		log.Fatalf("shutting down the server : %s", err)

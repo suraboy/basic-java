@@ -12,29 +12,29 @@ const (
 	TableNameUser = "users"
 )
 
-func (r *Postgres) GetUsers(request domain.User) ([]domain.User, error) {
+func (r *Postgres) GetUsers(filter domain.User) ([]domain.User, error) {
 	var model []domain.User
 	result := r.Connection.
 		Table(TableNameUser).
 		Order("created_at desc").
-		Find(&model, request)
+		Find(&model, filter)
 	return model, result.Error
 }
 
-func (r *Postgres) FindUser(request domain.User) (domain.User, error) {
+func (r *Postgres) FindUser(filter domain.User) (domain.User, error) {
 	var model domain.User
 	result := r.Connection.
 		Table(TableNameUser).
-		First(&model, &request)
+		First(&model, &filter)
 	return model, result.Error
 }
 
-func (r *Postgres) CreateUser(request domain.User) (domain.User, error) {
+func (r *Postgres) CreateUser(filter domain.User) (domain.User, error) {
 	result := r.Connection.
 		Table(TableNameUser).
-		Create(&request)
+		Create(&filter)
 
-	return request, result.Error
+	return filter, result.Error
 }
 
 func (r *Postgres) UpdateUser(filter domain.User, id int) (domain.User, error) {
@@ -47,11 +47,11 @@ func (r *Postgres) UpdateUser(filter domain.User, id int) (domain.User, error) {
 	return model, resp.Error
 }
 
-func (r *Postgres) DeleteUser(id int) (domain.User, error) {
+func (r *Postgres) DeleteUser(filter domain.User) (domain.User, error) {
 	var model domain.User
 	result := r.Connection.
 		Table(TableNameUser).
-		Delete(&model, "id = ?", id)
+		Delete(&model, filter)
 
 	return model, result.Error
 }

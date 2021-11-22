@@ -60,13 +60,13 @@ func (s Service) UpdateUserById(request domain.User, id int) (domain.User, error
 	return userInfo, nil
 }
 
-func (s Service) DestroyUserById(id int) (domain.User, error) {
-	_, err := s.repository.FindUser(domain.User{ID: uint(id)})
+func (s Service) DestroyUserById(request domain.User) (domain.User, error) {
+	_, err := s.repository.FindUser(request)
 	if err != nil {
 		return domain.User{}, err
 	}
 
-	res, err := s.repository.DeleteUser(id)
+	res, err := s.repository.DeleteUser(request)
 	if err != nil {
 		return domain.User{}, responseBody.SendExceptionError(c, err)
 	}
