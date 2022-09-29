@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  demo-java-mariadb:
+    image: mariadb:10.4.3-bionic
+    container_name: demo-java-mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - /var/lib/mysql
+    networks:
+      backend:
+        aliases:
+          - db
+    environment:
+      - MYSQL_ROOT_USERNAME=root
+      - MYSQL_ROOT_PASSWORD=root
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+  demo-java-pma:
+    image: phpmyadmin/phpmyadmin:5
+    container_name: demo-java-pma
+    depends_on:
+      - demo-java-mariadb
+    restart: always
+    ports:
+      - 8880:80
+    networks:
+      backend:
+        aliases:
+          - phpmyadmin
+    environment:
+      PMA_HOST: demo-java-mariadb
+      PMA_PORT: 3306
+networks:
+  backend:
+    external: false
+    name: backend-network
